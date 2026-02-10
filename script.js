@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initFAQ();
     initPricingToggle();
     initChatWidget();
+    initStartCall();
 });
 
 // ===== Navbar Scroll Effect =====
@@ -277,6 +278,81 @@ function initChatWidget() {
     sendBtn.addEventListener('click', sendMessage);
     input.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') sendMessage();
+    });
+}
+
+// ===== Start Call (Twilio + Voiceflow) =====
+function initStartCall() {
+    const phoneInput = document.getElementById('phone-input');
+    const startCallBtn = document.getElementById('start-call-btn');
+    const btnText = startCallBtn.querySelector('span');
+    const btnIcon = startCallBtn.querySelector('svg');
+
+    startCallBtn.addEventListener('click', async () => {
+        const phone = phoneInput.value.trim();
+
+        if (!phone) {
+            phoneInput.focus();
+            phoneInput.classList.add('border-red-500');
+            setTimeout(() => phoneInput.classList.remove('border-red-500'), 2000);
+            return;
+        }
+
+        // Disable button and show loading
+        startCallBtn.disabled = true;
+        btnText.textContent = 'Calling...';
+        startCallBtn.classList.add('opacity-75', 'cursor-not-allowed');
+
+        try {
+            const response = await fetch('/api/call', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phoneNumber: phone }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                btnText.textContent = 'Call Sent!';
+                startCallBtn.classList.remove('bg-primary-600', 'hover:bg-primary-500');
+                startCallBtn.classList.add('bg-green-600');
+                phoneInput.value = '';
+
+                setTimeout(() => {
+                    btnText.textContent = 'Start Call';
+                    startCallBtn.classList.remove('bg-green-600');
+                    startCallBtn.classList.add('bg-primary-600', 'hover:bg-primary-500');
+                }, 4000);
+            } else {
+                btnText.textContent = data.error || 'Failed';
+                startCallBtn.classList.remove('bg-primary-600', 'hover:bg-primary-500');
+                startCallBtn.classList.add('bg-red-600');
+
+                setTimeout(() => {
+                    btnText.textContent = 'Start Call';
+                    startCallBtn.classList.remove('bg-red-600');
+                    startCallBtn.classList.add('bg-primary-600', 'hover:bg-primary-500');
+                }, 3000);
+            }
+        } catch (err) {
+            btnText.textContent = 'Error - Try Again';
+            startCallBtn.classList.remove('bg-primary-600', 'hover:bg-primary-500');
+            startCallBtn.classList.add('bg-red-600');
+
+            setTimeout(() => {
+                btnText.textContent = 'Start Call';
+                startCallBtn.classList.remove('bg-red-600');
+                startCallBtn.classList.add('bg-primary-600', 'hover:bg-primary-500');
+            }, 3000);
+        } finally {
+            startCallBtn.disabled = false;
+            startCallBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+        }
+    });
+
+    // Allow Enter key to trigger call
+    phoneInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') startCallBtn.click();
     });
 }
 

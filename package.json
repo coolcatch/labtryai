@@ -1,0 +1,9 @@
+{
+  "name": "labtryai",
+  "version": "1.0.0",
+  "description": "LabTryAI - AI Voice & Chat Agent",
+  "private": true,
+  "dependencies": {
+    "twilio": "^5.0.0"
+  }
+}

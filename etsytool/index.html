@@ -1,56 +1,612 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Etsy Tool - Coming Soon | LabTryAI</title>
+    <title>Etsy Tool - AI-Powered Etsy Shop Management | LabTryAI</title>
+    <meta name="description" content="Automate your Etsy shop with AI. Optimize listings, track competitors, manage inventory, and boost sales — all from one dashboard.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧪</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        dark: { 800: '#1e293b', 850: '#141c2b', 900: '#0f172a', 950: '#080d19' },
-                        primary: { 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb' },
-                        cyan: { 400: '#22d3ee' },
+                        primary: {
+                            50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd',
+                            400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8',
+                            800: '#1e40af', 900: '#1e3a8a',
+                        },
+                        cyan: { 300: '#67e8f9', 400: '#22d3ee', 500: '#06b6d4' },
+                        orange: { 400: '#fb923c', 500: '#f97316', 600: '#ea580c' },
+                        dark: {
+                            300: '#cbd5e1', 400: '#94a3b8', 500: '#64748b', 600: '#475569',
+                            700: '#334155', 800: '#1e293b', 850: '#141c2b', 900: '#0f172a', 950: '#080d19',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                        'fade-in': 'fadeIn 0.8s ease-out',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(30px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        glow: {
+                            '0%': { boxShadow: '0 0 20px rgba(249, 115, 22, 0.3)' },
+                            '100%': { boxShadow: '0 0 40px rgba(249, 115, 22, 0.6)' },
+                        }
                     }
                 }
             }
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <style>body { font-family: 'Inter', sans-serif; }</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        html { scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        .navbar-scrolled {
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+        ::selection {
+            background-color: rgba(249, 115, 22, 0.3);
+            color: white;
+        }
+        a:focus-visible, button:focus-visible, input:focus-visible {
+            outline: 2px solid #f97316;
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+    </style>
 </head>
-<body class="bg-dark-950 text-white min-h-screen flex flex-col items-center justify-center px-4">
-    <div class="text-center max-w-lg">
-        <a href="/" class="inline-flex items-center space-x-2 mb-12 group">
-            <div class="w-9 h-9 bg-gradient-to-br from-cyan-400 to-primary-600 rounded-lg flex items-center justify-center">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
-                </svg>
-            </div>
-            <span class="text-xl font-bold">LabTryAI</span>
-        </a>
+<body class="bg-dark-950 text-white font-sans antialiased">
 
-        <div class="inline-flex items-center space-x-2 bg-primary-600/15 border border-primary-500/25 rounded-full px-5 py-2 mb-8">
-            <span class="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
-            <span class="text-cyan-400 text-sm font-medium">Coming Soon</span>
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 lg:h-20">
+                <a href="/" class="flex items-center space-x-2.5 group">
+                    <div class="w-9 h-9 bg-gradient-to-br from-cyan-400 to-primary-600 rounded-lg flex items-center justify-center transform group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                        </svg>
+                    </div>
+                    <span class="text-xl font-bold text-white">LabTryAI</span>
+                </a>
+
+                <div class="hidden lg:flex items-center space-x-8">
+                    <a href="#features" class="text-dark-300 hover:text-white transition-colors text-sm font-medium">Features</a>
+                    <a href="#how-it-works" class="text-dark-300 hover:text-white transition-colors text-sm font-medium">How It Works</a>
+                    <a href="#use-cases" class="text-dark-300 hover:text-white transition-colors text-sm font-medium">Use Cases</a>
+                    <a href="#waitlist" class="text-dark-300 hover:text-white transition-colors text-sm font-medium">Join Waitlist</a>
+                </div>
+
+                <div class="hidden lg:flex items-center space-x-3">
+                    <a href="/" class="border border-dark-600 hover:border-dark-500 text-white px-5 py-2 rounded-lg text-sm font-medium transition-all hover:bg-dark-800">
+                        LabTryAI Home
+                    </a>
+                    <a href="#waitlist" class="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-lg text-sm font-semibold transition-all hover:shadow-lg hover:shadow-orange-600/25">
+                        Get Early Access
+                    </a>
+                </div>
+
+                <button id="mobile-menu-btn" class="lg:hidden p-2 text-dark-300 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
         </div>
 
-        <h1 class="text-4xl sm:text-5xl font-bold mb-5">
-            Etsy <span class="bg-gradient-to-r from-cyan-400 to-primary-400 bg-clip-text text-transparent">Tool</span>
-        </h1>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="lg:hidden hidden bg-dark-900/95 backdrop-blur-xl border-t border-dark-800">
+            <div class="px-4 py-4 space-y-3">
+                <a href="#features" class="block text-dark-300 hover:text-white transition-colors text-sm font-medium py-2">Features</a>
+                <a href="#how-it-works" class="block text-dark-300 hover:text-white transition-colors text-sm font-medium py-2">How It Works</a>
+                <a href="#use-cases" class="block text-dark-300 hover:text-white transition-colors text-sm font-medium py-2">Use Cases</a>
+                <a href="#waitlist" class="block text-dark-300 hover:text-white transition-colors text-sm font-medium py-2">Join Waitlist</a>
+                <div class="pt-2 space-y-2">
+                    <a href="/" class="block border border-dark-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium text-center transition-all">LabTryAI Home</a>
+                    <a href="#waitlist" class="block bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-lg text-sm font-semibold text-center transition-all">Get Early Access</a>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-        <p class="text-gray-400 text-lg mb-10 leading-relaxed">
-            We're building something great. Stay tuned for our AI-powered Etsy tool to help grow your business.
-        </p>
+    <!-- ========== HERO SECTION ========== -->
+    <section class="relative min-h-screen flex flex-col items-center justify-center pt-20 pb-8 overflow-hidden">
+        <div class="absolute inset-0">
+            <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-orange-500/8 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-dark-700/50 to-transparent"></div>
+        </div>
 
-        <a href="/" class="inline-flex items-center space-x-2 bg-primary-600 hover:bg-primary-500 text-white px-6 py-3 rounded-xl font-semibold transition-all hover:shadow-lg hover:shadow-primary-600/25">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12"/>
-            </svg>
-            <span>Back to Home</span>
-        </a>
-    </div>
+        <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <!-- Badge -->
+            <div class="inline-flex items-center space-x-2 bg-orange-500/15 border border-orange-500/25 rounded-full px-5 py-2 mb-10">
+                <span class="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></span>
+                <span class="text-orange-300 text-sm font-medium">Coming Soon</span>
+            </div>
+
+            <!-- Main Heading -->
+            <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] mb-8 tracking-tight">
+                AI-powered tools for<br>
+                your <span class="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">Etsy</span> shop.
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="text-dark-400 text-base sm:text-lg md:text-xl leading-relaxed mb-10 max-w-3xl mx-auto">
+                <span class="text-orange-400 font-semibold">Optimize listings.</span>
+                <span class="text-orange-400 font-semibold">Track competitors.</span>
+                <span class="text-orange-400 font-semibold">Boost sales.</span>
+                Let AI handle the tedious parts of running your Etsy shop so you can focus on creating.
+            </p>
+
+            <!-- Email Waitlist -->
+            <div id="waitlist" class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 max-w-xl mx-auto">
+                <div class="relative flex-1 w-full">
+                    <input type="email" id="waitlist-email" placeholder="Enter your email for early access" class="w-full bg-dark-850 border border-dark-700 hover:border-dark-600 focus:border-orange-500 rounded-xl px-5 py-4 text-base text-white placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all">
+                </div>
+                <button id="waitlist-btn" class="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-xl text-base font-semibold transition-all hover:shadow-xl hover:shadow-orange-600/25 flex items-center justify-center space-x-2 whitespace-nowrap">
+                    <span>Join Waitlist</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                    </svg>
+                </button>
+            </div>
+            <p id="waitlist-msg" class="text-sm text-dark-500 -mt-10 mb-16 hidden"></p>
+
+            <!-- Three Stats Row -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 max-w-3xl mx-auto">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-14 h-14 bg-dark-850 border border-dark-700 rounded-2xl flex items-center justify-center mb-4">
+                        <svg class="w-7 h-7 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-white font-semibold text-base mb-1.5">SEO Optimization</h3>
+                    <p class="text-dark-400 text-sm leading-relaxed">AI-driven title, tag, and description optimization to rank higher in Etsy search.</p>
+                </div>
+
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-14 h-14 bg-dark-850 border border-dark-700 rounded-2xl flex items-center justify-center mb-4">
+                        <svg class="w-7 h-7 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-white font-semibold text-base mb-1.5">Competitor Insights</h3>
+                    <p class="text-dark-400 text-sm leading-relaxed">See what's working for top sellers and get actionable insights for your shop.</p>
+                </div>
+
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-14 h-14 bg-dark-850 border border-dark-700 rounded-2xl flex items-center justify-center mb-4">
+                        <svg class="w-7 h-7 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-white font-semibold text-base mb-1.5">Revenue Growth</h3>
+                    <p class="text-dark-400 text-sm leading-relaxed">Data-driven pricing and promotion strategies to maximize your shop's revenue.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FEATURES SECTION ========== -->
+    <section id="features" class="relative py-20 lg:py-28">
+        <div class="absolute inset-0">
+            <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-dark-700/50 to-transparent"></div>
+        </div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+                <div class="inline-flex items-center space-x-2 bg-orange-500/10 border border-orange-500/20 rounded-full px-4 py-1.5 mb-4">
+                    <span class="text-orange-300 text-sm font-medium">Features</span>
+                </div>
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-5">
+                    Everything to Grow Your
+                    <span class="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">Etsy Shop</span>
+                </h2>
+                <p class="text-dark-400 text-lg">Powerful AI tools designed specifically for Etsy sellers who want to sell more and work less.</p>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                <!-- Feature 1: Listing Optimizer -->
+                <div class="group bg-dark-900/50 border border-dark-800 hover:border-orange-500/30 rounded-2xl p-6 lg:p-8 transition-all duration-300 hover:shadow-xl hover:shadow-orange-600/5 reveal reveal-delay-1">
+                    <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center mb-5 group-hover:bg-orange-500/20 transition-colors">
+                        <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-3">Listing Optimizer</h3>
+                    <p class="text-dark-400 text-sm leading-relaxed">AI rewrites your titles, tags, and descriptions to maximize visibility in Etsy search results. Get more clicks from the same listings.</p>
+                </div>
+
+                <!-- Feature 2: Keyword Research -->
+                <div class="group bg-dark-900/50 border border-dark-800 hover:border-orange-500/30 rounded-2xl p-6 lg:p-8 transition-all duration-300 hover:shadow-xl hover:shadow-orange-600/5 reveal reveal-delay-2">
+                    <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center mb-5 group-hover:bg-orange-500/20 transition-colors">
+                        <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-3">Keyword Research</h3>
+                    <p class="text-dark-400 text-sm leading-relaxed">Discover high-traffic, low-competition keywords that real Etsy shoppers are searching for. Stay ahead of trending search terms.</p>
+                </div>
+
+                <!-- Feature 3: Competitor Tracker -->
+                <div class="group bg-dark-900/50 border border-dark-800 hover:border-orange-500/30 rounded-2xl p-6 lg:p-8 transition-all duration-300 hover:shadow-xl hover:shadow-orange-600/5 reveal reveal-delay-3">
+                    <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center mb-5 group-hover:bg-orange-500/20 transition-colors">
+                        <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-3">Competitor Tracker</h3>
+                    <p class="text-dark-400 text-sm leading-relaxed">Monitor competing shops, track their pricing, bestsellers, and strategies. Get alerts when competitors make changes.</p>
+                </div>
+
+                <!-- Feature 4: Smart Pricing -->
+                <div class="group bg-dark-900/50 border border-dark-800 hover:border-orange-500/30 rounded-2xl p-6 lg:p-8 transition-all duration-300 hover:shadow-xl hover:shadow-orange-600/5 reveal reveal-delay-1">
+                    <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center mb-5 group-hover:bg-orange-500/20 transition-colors">
+                        <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-3">Smart Pricing</h3>
+                    <p class="text-dark-400 text-sm leading-relaxed">AI analyzes market data to suggest optimal pricing. Maximize profit margins without losing competitiveness.</p>
+                </div>
+
+                <!-- Feature 5: Sales Analytics -->
+                <div class="group bg-dark-900/50 border border-dark-800 hover:border-orange-500/30 rounded-2xl p-6 lg:p-8 transition-all duration-300 hover:shadow-xl hover:shadow-orange-600/5 reveal reveal-delay-2">
+                    <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center mb-5 group-hover:bg-orange-500/20 transition-colors">
+                        <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-3">Sales Analytics</h3>
+                    <p class="text-dark-400 text-sm leading-relaxed">Deep insights into your shop performance — revenue trends, conversion rates, best-selling items, and seasonal patterns.</p>
+                </div>
+
+                <!-- Feature 6: Listing Generator -->
+                <div class="group bg-dark-900/50 border border-dark-800 hover:border-orange-500/30 rounded-2xl p-6 lg:p-8 transition-all duration-300 hover:shadow-xl hover:shadow-orange-600/5 reveal reveal-delay-3">
+                    <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center mb-5 group-hover:bg-orange-500/20 transition-colors">
+                        <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-3">AI Listing Generator</h3>
+                    <p class="text-dark-400 text-sm leading-relaxed">Upload a photo and let AI generate a complete, SEO-optimized listing — title, description, tags, and pricing — in seconds.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== HOW IT WORKS ========== -->
+    <section id="how-it-works" class="relative py-20 lg:py-28">
+        <div class="absolute inset-0 bg-gradient-to-b from-dark-950 via-dark-900/30 to-dark-950"></div>
+        <div class="absolute inset-0">
+            <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-dark-700/50 to-transparent"></div>
+        </div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+                <div class="inline-flex items-center space-x-2 bg-orange-500/10 border border-orange-500/20 rounded-full px-4 py-1.5 mb-4">
+                    <span class="text-orange-300 text-sm font-medium">How It Works</span>
+                </div>
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-5">
+                    Three Steps to
+                    <span class="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">More Sales</span>
+                </h2>
+                <p class="text-dark-400 text-lg">Connect your Etsy shop and let AI do the heavy lifting.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 lg:gap-12">
+                <!-- Step 1 -->
+                <div class="relative text-center reveal reveal-delay-1">
+                    <div class="w-16 h-16 bg-dark-850 border border-dark-700 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <span class="text-2xl font-bold bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">1</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Connect Your Shop</h3>
+                    <p class="text-dark-400 leading-relaxed">Link your Etsy shop with one click. We securely import your listings, stats, and shop data.</p>
+                    <div class="hidden md:block absolute top-8 left-[60%] w-[80%] h-px bg-gradient-to-r from-dark-600/50 to-transparent"></div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="relative text-center reveal reveal-delay-2">
+                    <div class="w-16 h-16 bg-dark-850 border border-dark-700 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <span class="text-2xl font-bold bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">2</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Get AI Recommendations</h3>
+                    <p class="text-dark-400 leading-relaxed">Our AI analyzes your listings, competitors, and market trends to generate personalized optimization suggestions.</p>
+                    <div class="hidden md:block absolute top-8 left-[60%] w-[80%] h-px bg-gradient-to-r from-dark-600/50 to-transparent"></div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="text-center reveal reveal-delay-3">
+                    <div class="w-16 h-16 bg-dark-850 border border-dark-700 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <span class="text-2xl font-bold bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">3</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Apply & Grow</h3>
+                    <p class="text-dark-400 leading-relaxed">Apply changes with one click or let AI auto-optimize. Watch your traffic, conversions, and revenue climb.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== USE CASES ========== -->
+    <section id="use-cases" class="relative py-20 lg:py-28">
+        <div class="absolute inset-0">
+            <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-dark-700/50 to-transparent"></div>
+        </div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+                <div class="inline-flex items-center space-x-2 bg-orange-500/10 border border-orange-500/20 rounded-full px-4 py-1.5 mb-4">
+                    <span class="text-orange-300 text-sm font-medium">Built For Sellers</span>
+                </div>
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-5">
+                    Made for Every
+                    <span class="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">Etsy Seller</span>
+                </h2>
+                <p class="text-dark-400 text-lg">Whether you sell handmade jewelry or vintage clothing, our tools adapt to your niche.</p>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Handmade -->
+                <div class="group bg-dark-900/50 border border-dark-800 hover:border-orange-500/30 rounded-2xl p-6 transition-all duration-300 hover:shadow-xl hover:shadow-orange-600/5 reveal reveal-delay-1">
+                    <div class="w-12 h-12 bg-pink-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Handmade Goods</h3>
+                    <p class="text-dark-400 text-sm leading-relaxed">Jewelry, ceramics, candles, soaps — optimize listings that highlight your craft and find your ideal buyers.</p>
+                </div>
+
+                <!-- Digital Products -->
+                <div class="group bg-dark-900/50 border border-dark-800 hover:border-orange-500/30 rounded-2xl p-6 transition-all duration-300 hover:shadow-xl hover:shadow-orange-600/5 reveal reveal-delay-2">
+                    <div class="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Digital Products</h3>
+                    <p class="text-dark-400 text-sm leading-relaxed">Printables, SVGs, templates, planners — scale your digital shop with optimized keywords and trending niches.</p>
+                </div>
+
+                <!-- Vintage -->
+                <div class="group bg-dark-900/50 border border-dark-800 hover:border-orange-500/30 rounded-2xl p-6 transition-all duration-300 hover:shadow-xl hover:shadow-orange-600/5 reveal reveal-delay-3">
+                    <div class="w-12 h-12 bg-amber-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Vintage Items</h3>
+                    <p class="text-dark-400 text-sm leading-relaxed">Clothing, furniture, collectibles — AI writes compelling descriptions and finds the right buyers for unique pieces.</p>
+                </div>
+
+                <!-- Print on Demand -->
+                <div class="group bg-dark-900/50 border border-dark-800 hover:border-orange-500/30 rounded-2xl p-6 transition-all duration-300 hover:shadow-xl hover:shadow-orange-600/5 reveal reveal-delay-4">
+                    <div class="w-12 h-12 bg-cyan-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Print on Demand</h3>
+                    <p class="text-dark-400 text-sm leading-relaxed">T-shirts, mugs, stickers — identify trending designs and niches, optimize mockup listings at scale.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CTA SECTION ========== -->
+    <section class="relative py-20 lg:py-28">
+        <div class="absolute inset-0">
+            <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-dark-700/50 to-transparent"></div>
+        </div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="relative bg-dark-900 border border-dark-800 rounded-3xl p-10 lg:p-16 text-center overflow-hidden reveal">
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-orange-500/5 rounded-full blur-3xl"></div>
+
+                <div class="relative">
+                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-5">
+                        Ready to Grow Your
+                        <span class="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">Etsy Shop?</span>
+                    </h2>
+                    <p class="text-dark-300 text-lg max-w-2xl mx-auto mb-8">
+                        Be among the first to use AI-powered tools built specifically for Etsy sellers. Join the waitlist and get early access when we launch.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="#waitlist" class="group bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-xl text-base font-semibold transition-all hover:shadow-xl hover:shadow-orange-600/25 flex items-center justify-center space-x-2">
+                            <span>Join the Waitlist</span>
+                            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                            </svg>
+                        </a>
+                        <a href="/" class="border border-dark-600 hover:border-dark-500 hover:bg-dark-800/50 text-white px-8 py-4 rounded-xl text-base font-semibold transition-all flex items-center justify-center space-x-2">
+                            <span>Explore LabTryAI</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="border-t border-dark-800 py-12 lg:py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
+                <div class="sm:col-span-2 lg:col-span-1">
+                    <a href="/" class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 bg-gradient-to-br from-cyan-400 to-primary-600 rounded-lg flex items-center justify-center">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                            </svg>
+                        </div>
+                        <span class="text-lg font-bold">LabTryAI</span>
+                    </a>
+                    <p class="text-dark-400 text-sm leading-relaxed mb-4">AI-powered tools for Etsy sellers. Optimize listings, track competitors, and grow your shop with data-driven insights.</p>
+                </div>
+
+                <div>
+                    <h4 class="text-sm font-semibold uppercase tracking-wider text-dark-300 mb-4">Etsy Tool</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#features" class="text-dark-400 hover:text-white transition-colors text-sm">Features</a></li>
+                        <li><a href="#how-it-works" class="text-dark-400 hover:text-white transition-colors text-sm">How It Works</a></li>
+                        <li><a href="#use-cases" class="text-dark-400 hover:text-white transition-colors text-sm">Use Cases</a></li>
+                        <li><a href="#waitlist" class="text-dark-400 hover:text-white transition-colors text-sm">Join Waitlist</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-sm font-semibold uppercase tracking-wider text-dark-300 mb-4">LabTryAI</h4>
+                    <ul class="space-y-3">
+                        <li><a href="/" class="text-dark-400 hover:text-white transition-colors text-sm">Home</a></li>
+                        <li><a href="/#features" class="text-dark-400 hover:text-white transition-colors text-sm">AI Voice Agent</a></li>
+                        <li><a href="/#pricing" class="text-dark-400 hover:text-white transition-colors text-sm">Pricing</a></li>
+                        <li><a href="/#demo" class="text-dark-400 hover:text-white transition-colors text-sm">Live Demo</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-sm font-semibold uppercase tracking-wider text-dark-300 mb-4">Legal</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-dark-400 hover:text-white transition-colors text-sm">Privacy Policy</a></li>
+                        <li><a href="#" class="text-dark-400 hover:text-white transition-colors text-sm">Terms of Service</a></li>
+                        <li><a href="#" class="text-dark-400 hover:text-white transition-colors text-sm">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-dark-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <p class="text-dark-500 text-sm">&copy; 2026 LabTryAI. All rights reserved.</p>
+                <div class="flex items-center space-x-4">
+                    <a href="#" class="w-9 h-9 bg-dark-800 hover:bg-dark-700 rounded-lg flex items-center justify-center transition-colors">
+                        <svg class="w-4 h-4 text-dark-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="w-9 h-9 bg-dark-800 hover:bg-dark-700 rounded-lg flex items-center justify-center transition-colors">
+                        <svg class="w-4 h-4 text-dark-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                        </svg>
+                    </a>
+                    <a href="https://github.com/coolcatch/labtryai" class="w-9 h-9 bg-dark-800 hover:bg-dark-700 rounded-lg flex items-center justify-center transition-colors">
+                        <svg class="w-4 h-4 text-dark-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    (function() {
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('navbar-scrolled', window.scrollY > 20);
+        });
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+        let menuOpen = false;
+
+        mobileMenuBtn.addEventListener('click', () => {
+            menuOpen = !menuOpen;
+            mobileMenu.classList.toggle('hidden', !menuOpen);
+            menuIcon.setAttribute('d', menuOpen
+                ? 'M6 18L18 6M6 6l12 12'
+                : 'M4 6h16M4 12h16M4 18h16'
+            );
+        });
+
+        // Close mobile menu on link click
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuOpen = false;
+                mobileMenu.classList.add('hidden');
+                menuIcon.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+            });
+        });
+
+        // Waitlist form
+        const waitlistBtn = document.getElementById('waitlist-btn');
+        const waitlistEmail = document.getElementById('waitlist-email');
+        const waitlistMsg = document.getElementById('waitlist-msg');
+
+        waitlistBtn.addEventListener('click', () => {
+            const email = waitlistEmail.value.trim();
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                waitlistMsg.textContent = 'Please enter a valid email address.';
+                waitlistMsg.className = 'text-sm text-red-400 -mt-10 mb-16';
+                return;
+            }
+            waitlistBtn.disabled = true;
+            waitlistBtn.innerHTML = '<span>Joining...</span>';
+            // Simulate success (replace with real API call later)
+            setTimeout(() => {
+                waitlistMsg.textContent = "You're on the list! We'll notify you when Etsy Tool launches.";
+                waitlistMsg.className = 'text-sm text-green-400 -mt-10 mb-16';
+                waitlistBtn.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Joined!</span>';
+                waitlistBtn.classList.remove('bg-orange-500', 'hover:bg-orange-600');
+                waitlistBtn.classList.add('bg-green-600', 'cursor-default');
+                waitlistEmail.disabled = true;
+                waitlistEmail.classList.add('opacity-50');
+            }, 800);
+        });
+
+        waitlistEmail.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') waitlistBtn.click();
+        });
+
+        // Scroll reveal
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        revealElements.forEach(el => revealObserver.observe(el));
+    })();
+    </script>
 </body>
 </html>
